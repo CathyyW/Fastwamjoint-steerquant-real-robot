@@ -1,0 +1,132 @@
+# AgileX Cobot Magic dual-arm W4A8 paper profile. Default CLI mode is shadow.
+# Use FASTWAM_AUTHKEY in both server/client environments; never store it here.
+# State/action: [left joints (rad) x6, left gripper (m), right joints x6, right gripper].
+# Images: native uint8 channels, no RGB/BGR conversion.
+# Raw action extrema below are task diagnostics; command bounds are hardware bounds.
+policy:
+  task: pack
+  deployment_sha256: 4e3b7ff923623117d394d267243e1bb62f3027f5920ad5413754129e8dcc95b8
+  prompt: Put the three objects on the table into the container.
+policy_server:
+  host: 127.0.0.1
+  port: 18765
+runtime:
+  control_hz: 40
+  chunk_size: 32
+  action_dim: 14
+  exp_weight_factor: 0.2
+  arrival_smoothstep_steps: 5
+  min_latency_headroom_steps: 1
+  startup_timeout_s: 15.0
+  action_wait_timeout_s: 0.2
+  fresh_chunk_grace_s: 0.6
+  producer_poll_s: 0.002
+  producer_join_timeout_s: 26.0
+cameras:
+  topics:
+    cam_high: /camera_h/color/image_raw
+    cam_left_wrist: /camera_l/color/image_raw
+    cam_right_wrist: /camera_r/color/image_raw
+  max_age_s: 1.0
+  max_skew_s: 0.05
+  startup_timeout_s: 10.0
+robot:
+  left_channel: can_left
+  right_channel: can_right
+  bitrate: 1000000
+  speed_pct: 15
+  max_linear_vel: 0.5
+  max_angular_vel: 0.1
+  max_linear_acc: 0.1
+  max_angular_acc: 0.05
+  action_safety_threshold: 1.5
+  max_action_delta: 0.25
+  max_gripper_delta: 0.01
+  state_safety_threshold: 0.3
+  left_init_position:
+  - -0.5102295535280224
+  - 1.2830962528961514
+  - -0.8434827209038196
+  - 0.01857030324121967
+  - 1.1496832848737049
+  - 0.15741124523736857
+  - 0.0886
+  right_init_position:
+  - 0.4801
+  - 1.1595
+  - -0.781
+  - 0.092
+  - 1.1126
+  - -0.0512
+  - 0.0515
+  state_max_age_s: 0.25
+  gripper_force: 1.0
+  initial_steps: 50
+  initial_period_s: 0.04
+safety:
+  joint_max_step_delta: 0.04
+  gripper_max_step_delta: 0.01
+  joint_bound_margin: 0.005
+  gripper_bound_margin: 0.0
+  joint_raw_action_bound_tolerance: 0.02
+  gripper_raw_action_bound_tolerance: 0.005
+  lower_bounds:
+  - -2.617994
+  - 0
+  - -2.96706
+  - -1.74533
+  - -1.22173
+  - -2.094396
+  - 0
+  - -2.617994
+  - 0
+  - -2.96706
+  - -1.74533
+  - -1.22173
+  - -2.094396
+  - 0
+  upper_bounds:
+  - 2.617994
+  - 3.141593
+  - 0
+  - 1.74533
+  - 1.22173
+  - 2.094396
+  - 0.1
+  - 2.617994
+  - 3.141593
+  - 0
+  - 1.74533
+  - 1.22173
+  - 2.094396
+  - 0.1
+  raw_action_lower_bounds:
+  - -0.7464985251426697
+  - 0.5993409752845764
+  - -1.998977780342102
+  - -0.3060724139213562
+  - 0.66883784532547
+  - -0.3932400941848755
+  - -0.005799999926239252
+  - 0.09676186740398407
+  - 0.854965329170227
+  - -2.2580385208129883
+  - -0.20426924526691437
+  - 0.6320310235023499
+  - -0.32138824462890625
+  - -0.0035000001080334187
+  raw_action_upper_bounds:
+  - -0.12095669656991959
+  - 2.1204752922058105
+  - -0.6353628039360046
+  - 0.4025202989578247
+  - 1.2315987348556519
+  - 0.42500561475753784
+  - 0.08070000261068344
+  - 0.6975506544113159
+  - 2.4567954540252686
+  - -0.588595449924469
+  - 0.2802029848098755
+  - 1.2326802015304565
+  - 0.41314369440078735
+  - 0.0737999975681305

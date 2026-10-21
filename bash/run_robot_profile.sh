@@ -28,10 +28,10 @@ case "$role" in
     exec python -u scripts/mock_w4a8_async50.py --config "$config" --max-steps 128 --output-dir "$output" "$@"
     ;;
   live-client)
-    # Imports existing controller read-only; starts no ROS launch or camera driver.
-    export PYTHONPATH="$root/src:/home/agilex/World_Action_Model/physical_WM/src/fastwam-sparse/.worktrees/joint-asi-async50/src${PYTHONPATH:+:$PYTHONPATH}"
-    exec python -u scripts/deploy_real_w4a8_async50.py --config "$config" --max-steps 128 \
-      --output-dir "$output" "$@" --no-execute-actions --no-move-to-initial
+    if [ "$mode" != w4a8 ]; then echo 'The portable live client supports only W4A8' >&2; exit 2; fi
+    exec python -u -m fastwam_steerquant.real_robot.run \
+      --config "configs/robot_${task}_w4a8_live.example.yaml" --max-steps 128 \
+      "$@" --no-execute-actions --no-move-to-initial
     ;;
   *) echo 'Expected server, client or live-client' >&2; exit 2;;
 esac

@@ -195,8 +195,10 @@ class RealRobotAdapter:
         if record.get("task") != self.task["task"] or record.get("prompt") != self.task["prompt"]:
             raise ValueError("Observation task/prompt differs from adapter.")
         channel_order = record.get("image_channel_order", "RGB")
-        if channel_order not in ("RGB", "as_stored"):
-            raise ValueError("Convert known BGR to RGB in the dataset reader first.")
+        if channel_order not in ("RGB", "as_stored", "native"):
+            raise ValueError("Expected an explicit RGB, as_stored, or native channel convention.")
+        # Live native channels are supplied unchanged by the portable client.
+        # This declaration does not authorize any channel conversion here.
         if channel_order == "as_stored" and self.config.get("dataset", {}).get("channel_policy") != "as_stored":
             raise ValueError("Stored-channel observations require explicit as_stored experiment approval.")
         images = {}

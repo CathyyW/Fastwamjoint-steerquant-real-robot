@@ -169,8 +169,8 @@ class PackedRobotPolicy:
         self.assert_native()
         record = dict(observation)
         record["task"] = self.config["wam"]["quantization"]["task"]
-        # Existing LiveImages already emits RGB. Recorded readers explicitly
-        # label as_stored; neither path performs a speculative channel swap.
+        # Legacy clients emit RGB; portable live clients explicitly label native
+        # channels. Preserve either declaration without a speculative swap.
         record.setdefault("image_channel_order", "RGB")
         graph = getattr(self.policy.model, "_rollout_graph", None)
         before = graph.replays if graph else 0

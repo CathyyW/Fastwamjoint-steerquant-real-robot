@@ -1,6 +1,5 @@
 """CPU-only mode/identity and unchanged runtime deadline checks."""
 from pathlib import Path
-import sys
 
 import pytest
 import yaml
@@ -20,9 +19,7 @@ def test_profiles_and_original_runtime_budget(task, mode, rate, window):
     for key, value in original["runtime"].items():
         if key not in ("rospy_rate", "output_dir"):
             assert config["runtime"][key] == value
-    workspace = Path(config["offline"]["async_workspace"])
-    sys.path.insert(0, str(workspace / "src"))
-    from qi.deployment.async_joint_runtime import AsyncJointRTCRuntime, AsyncJointRTCRuntimeConfig
+    from fastwam_steerquant.real_robot.runtime import AsyncJointRTCRuntime, AsyncJointRTCRuntimeConfig
     runtime = AsyncJointRTCRuntime.__new__(AsyncJointRTCRuntime)
     runtime.config = AsyncJointRTCRuntimeConfig(control_hz=rate, chunk_size=32)
     assert (32-runtime.config.min_latency_headroom_steps)/rate == window

@@ -77,18 +77,10 @@ def test_protocol_reset_and_physical_actions_are_not_transformed():
     np.testing.assert_array_equal(conn.responses[2]["action"], np.full((32, 14), 0.123, np.float32))
 
 
-def test_entry_keeps_original_motion_gates_and_sink_order():
-    import ast
+def test_legacy_entry_delegates_to_portable_client():
+    import runpy
     from pathlib import Path
-    import yaml
+    from fastwam_steerquant.real_robot.run import main
     root = Path(__file__).resolve().parents[1]
-    config = yaml.safe_load((root / "configs/robot_pack_w4a8_async50.yaml").read_text())
-    workspace = Path(config["offline"]["async_workspace"])
-    original = workspace / "scripts/deploy_real_async50_asi_wam.py"
-    if not original.exists():
-        pytest.skip("Target machine worktree unavailable")
-    functions = lambda path: {n.name: ast.dump(n, include_attributes=False)
-                              for n in ast.parse(path.read_text()).body if isinstance(n, ast.FunctionDef)}
-    before, after = functions(original), functions(root / "scripts/deploy_real_w4a8_async50.py")
-    for name in ("parse_args", "prepare_action_sink", "save_results"):
-        assert before[name] == after[name]
+    module = runpy.run_path(str(root / "scripts/deploy_real_w4a8_async50.py"))
+    assert module["main"] is main
