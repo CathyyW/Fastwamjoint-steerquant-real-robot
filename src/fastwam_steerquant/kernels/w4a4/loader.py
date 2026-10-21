@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import importlib.util
 import shutil
 import sys
 from functools import lru_cache
@@ -45,6 +46,18 @@ def _fast_hadamard_root() -> Path:
 def load_extension():
     if not torch.cuda.is_available():
         raise RuntimeError("The native W4A4 backend requires CUDA.")
+    binary = os.environ.get("FASTWAM_W4A4_EXTENSION")
+    if binary:
+        path = Path(binary).expanduser().resolve(strict=True)
+        name = "fastwam_steerquant_cutlass_w4a4_sm89_wam_rot_v4"
+        if path.name != name + ".so":
+            raise ValueError("Expected the compiled W4A4 RHT wam_rot_v4 extension")
+        spec = importlib.util.spec_from_file_location(name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        if not callable(getattr(module, "symmetric_static_stream_scheduled_rht", None)):
+            raise RuntimeError("W4A4 binary lacks the scheduled RHT kernel")
+        return module
     if "TORCH_CUDA_ARCH_LIST" not in os.environ:
         major, minor = torch.cuda.get_device_capability()
         os.environ["TORCH_CUDA_ARCH_LIST"] = f"{major}.{minor}"

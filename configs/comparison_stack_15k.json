@@ -1,0 +1,26 @@
+{
+  "task": "stack",
+  "baseline_checkpoint": "/home/agilex/World_Action_Model/physical_WM/src/fastwam-sparse/checkpoint/stack/step_015000.pt",
+  "episode_hdf5": "/home/agilex/World_Action_Model/physical_WM/src/dashboard/data/robot_eval_incremental/sessions/stack_cups_original_20260814_193507_3f1a87/raw/episode_001/episode.hdf5",
+  "frame_indices": [
+    0,
+    37,
+    74,
+    111,
+    148,
+    185,
+    222,
+    259,
+    296,
+    333,
+    370,
+    408
+  ],
+  "channel_policy": "as_stored",
+  "sampling": "12 uniformly spaced frames across the entire recorded evaluation episode; semantic phase annotations unavailable",
+  "calibration_overlap": "different evaluation source than the declared training perfect episodes 0/35/70; exact calibration frame/content manifest unavailable",
+  "seed": 42,
+  "warmup_per_observation": 2,
+  "performance_observations": 6,
+  "repeats": 4
+}

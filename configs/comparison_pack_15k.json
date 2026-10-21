@@ -1,0 +1,26 @@
+{
+  "task": "pack",
+  "baseline_checkpoint": "/home/agilex/.cache/modelscope/hub/models/Mikuz12/joint_pack/step_015000.pt",
+  "episode_hdf5": "/home/agilex/World_Action_Model/physical_WM/src/dashboard/data/robot_eval_incremental/sessions/pack_3_objects_original_20260911_170411_3f7b45/raw/pending/episode_0.hdf5",
+  "frame_indices": [
+    0,
+    82,
+    164,
+    247,
+    329,
+    412,
+    494,
+    577,
+    659,
+    742,
+    824,
+    907
+  ],
+  "channel_policy": "as_stored",
+  "sampling": "12 uniformly spaced frames across the entire recorded evaluation episode; semantic phase annotations unavailable",
+  "calibration_overlap": "different evaluation source than the declared training perfect episodes 0/35/70; exact calibration frame/content manifest unavailable",
+  "seed": 42,
+  "warmup_per_observation": 2,
+  "performance_observations": 6,
+  "repeats": 4
+}

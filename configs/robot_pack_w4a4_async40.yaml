@@ -1,0 +1,101 @@
+wam:
+  ckpt: /home/agilex/World_Action_Model/physical_WM/src/Fastwam-steerquant/checkpoint/pack_w4a4/deployment.pt
+  dataset_stats: /home/agilex/World_Action_Model/physical_WM/checkpoints/k4_disjoint_pack_3_objecst/dataset_stats.json
+  train_config: /home/agilex/World_Action_Model/physical_WM/src/fastwam-sparse/.worktrees/joint-asi-async50/configs/train_config_joint_pack3_infer.yaml
+  device: cuda:0
+  mixed_precision: bf16
+  prompt: Put the three objects on the table into the container.
+  context_cache_dir: /home/agilex/World_Action_Model/physical_WM/data/text_embeds_cache/pack_3_objects_plus
+  use_text_encoder: false
+  action_horizon: 32
+  num_inference_steps: 10
+  seed: 42
+  rand_device: cpu
+  num_video_frames: 9
+  version1:
+    enabled: false
+  quantization:
+    backend: cutlass_w4a4
+    task: pack
+    deployment_sha256: 60505946b575177f6649f0c64b2fed9ff944d291791c029ef4a8e1c71a64b430
+    handoff_root: /home/agilex/World_Action_Model/physical_WM/src/Fastwam-steerquant/local/robot_handoff
+    extension: /home/agilex/.cache/torch_extensions/py310_cu128/fastwam_steerquant_cutlass_w4a4_sm89_wam_rot_v4/fastwam_steerquant_cutlass_w4a4_sm89_wam_rot_v4.so
+    cuda_graph: true
+    baseline_checkpoint: /home/agilex/.cache/modelscope/hub/models/Mikuz12/joint_pack/step_015000.pt
+policy_server:
+  host: 127.0.0.1
+  port: 18765
+  authkey: ${oc.env:FASTWAM_AUTHKEY}
+runtime:
+  arm_mode: dual
+  action_chunk_size: 32
+  exp_weight_factor: 0.2
+  rtc_debug: false
+  rospy_rate: 40
+  execute_actions: false
+  move_to_initial: false
+  max_steps: null
+  save_rollout: false
+  output_dir: ./output_actions/pack_w4a4_async40
+  arrival_smoothstep_steps: 5
+  continuous_action_shaping: true
+  joint_max_step_delta: 0.04
+  gripper_max_step_delta: 0.01
+  joint_bound_margin: 0.005
+  gripper_bound_margin: 0.0
+  joint_raw_action_bound_tolerance: 0.02
+  gripper_raw_action_bound_tolerance: 0.005
+  fresh_chunk_grace_s: 0.6
+robot:
+  left_channel: can_left
+  right_channel: can_right
+  bitrate: 1000000
+  speed_pct: 15
+  max_linear_vel: 0.5
+  max_angular_vel: 0.1
+  max_linear_acc: 0.1
+  max_angular_acc: 0.05
+  action_safety_threshold: 1.5
+  max_action_delta: 0.25
+  max_gripper_delta: 0.01
+  state_safety_threshold: 0.3
+  left_init_position:
+  - -0.5102295535280224
+  - 1.2830962528961514
+  - -0.8434827209038196
+  - 0.01857030324121967
+  - 1.1496832848737049
+  - 0.15741124523736857
+  - 0.0886
+  right_init_position:
+  - 0.4801
+  - 1.1595
+  - -0.781
+  - 0.092
+  - 1.1126
+  - -0.0512
+  - 0.0515
+cameras:
+  use_front: true
+  use_wrist: true
+  use_left_wrist: true
+  use_right_wrist: true
+  use_depth_image: false
+  front_camera_name: cam_high
+  left_wrist_camera_name: cam_left_wrist
+  right_wrist_camera_name: cam_right_wrist
+ros_topics_dual:
+  img_front_topic: /camera_h/color/image_raw
+  img_left_topic: /camera_l/color/image_raw
+  img_right_topic: /camera_r/color/image_raw
+  img_front_depth_topic: /camera_h/depth/image_raw
+  img_left_depth_topic: /camera_l/depth/image_raw
+  img_right_depth_topic: /camera_r/depth/image_raw
+offline:
+  episode_hdf5: /home/agilex/World_Action_Model/physical_WM/src/dashboard/data/robot_eval_incremental/sessions/pack_3_objects_original_20260911_170411_3f7b45/raw/pending/episode_0.hdf5
+  image_channel_order: as_stored
+  async_workspace: /home/agilex/World_Action_Model/physical_WM/src/fastwam-sparse/.worktrees/joint-asi-async50
+deployment_profile:
+  mode: w4a4
+  cuda_graph: true
+  source_checkpoint_sha256: 2b5da8ac40a2701f65f1f72cd613713047271deafbd2da929b3ed8ab75b17a49
